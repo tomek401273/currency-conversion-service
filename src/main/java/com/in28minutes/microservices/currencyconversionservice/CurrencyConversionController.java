@@ -28,7 +28,9 @@ public class CurrencyConversionController {
         urlVariables.put("to", to);
 
         ResponseEntity<CurrenctConversionBean> responseEntity =
-                new RestTemplate().getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrenctConversionBean.class, urlVariables);
+//                new RestTemplate().getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrenctConversionBean.class, urlVariables);
+                new RestTemplate().getForEntity("http://currency-exchange-service:8000/currency-exchange/from/{from}/to/{to}", CurrenctConversionBean.class, urlVariables);
+        System.out.println("concurency convert1: ");
         CurrenctConversionBean response = responseEntity.getBody();
 
         return new CurrenctConversionBean(response.getId(),
@@ -46,6 +48,8 @@ public class CurrencyConversionController {
     public CurrenctConversionBean convertCurrenctFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
         CurrenctConversionBean response = currencyExchangeServiceProxy.retrieveExchangeValue(from, to);
         logger.info("{}", response);
+        System.out.println("concurency convert2: ");
+
         return new CurrenctConversionBean(response.getId(),
                 response.getFrom(),
                 response.getTo(),
